@@ -8,7 +8,7 @@ from sklearn.preprocessing import LabelEncoder
 @st.cache_data
 def load_dataset():
     try:
-        data = pd.read_csv('dataset/yield_df.csv')  # Update the path if needed
+        data = pd.read_csv('yield_df.csv')  # Update the path if needed
         # Strip whitespace from string columns
         data = data.apply(lambda col: col.str.strip() if col.dtype == 'object' else col)
         return data
@@ -53,11 +53,11 @@ def load_model(filepath):
         st.stop()
 
 # Load preprocessing tools
-scaler = load_model('model1/scaler.pkl')
-feature_names = load_model('model1/feature_names.pkl')
+scaler = load_model('scaler.pkl')
+feature_names = load_model('feature_names.pkl')
 label_encoders = {
-    'Item': load_model('model1/label_encoder_Item.pkl'),
-    'Area': load_model('model1/label_encoder_Area.pkl')
+    'Item': load_model('label_encoder_Item.pkl'),
+    'Area': load_model('label_encoder_Area.pkl')
 }
 
 # Streamlit user inputs
@@ -71,7 +71,6 @@ temperature = st.sidebar.number_input("Average Temperature (°C)", min_value=-10
 # Allow user to select a model
 models_available = {
     'Gradient Boost': 'gradient_boost_model.pkl',
-    'Random Forest': 'random_forest_model.pkl',
     'Linear Regression': 'linear_regression_model.pkl',
     'XGBoost': 'xgboost_model.pkl',
     'Average of All Models': 'average_of_all_models'
@@ -126,7 +125,7 @@ if model_name == 'Average of All Models':
     st.write(f"The predicted crop yield using **Average of All Models** is: **{average_prediction:.2f} hg/ha_yield**")
 else:
     # Load the selected model
-    model_filepath = f'model1/{models_available[model_name]}'
+    model_filepath = f'{models_available[model_name]}'
     model = load_model(model_filepath)
     
     # Make prediction
