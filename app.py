@@ -103,7 +103,7 @@ except ValueError as e:
 def load_and_predict(model_names, scaled_input):
     predictions = []
     for model_name in model_names:
-        model_filepath = f'model1/{models_available[model_name]}'
+        model_filepath = f'{models_available[model_name]}'
         model = load_model(model_filepath)
         pred = model.predict(scaled_input)[0]
         predictions.append(pred)
