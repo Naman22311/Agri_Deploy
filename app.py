@@ -5,42 +5,7 @@ from sklearn.preprocessing import LabelEncoder
 
 # ---------------------------------------
 # Cache dataset loading
-@st.cache_data
-def load_dataset():
-    try:
-        data = pd.read_csv('yield_df.csv')  # Update the path if needed
-        # Strip whitespace from string columns
-        data = data.apply(lambda col: col.str.strip() if col.dtype == 'object' else col)
-        return data
-    except FileNotFoundError:
-        st.error("Dataset not found. Please ensure the file 'yield_df.csv' is in the 'dataset/' folder.")
-        st.stop()
 
-data = load_dataset()
-
-# Display the dataset
-st.subheader("Dataset Overview")
-st.dataframe(data)
-
-# Convert categorical features to numerical using Label Encoding
-@st.cache_data
-def encode_categorical_columns(data, columns):
-    encoders = {}
-    for column in columns:
-        if column in data.columns:
-            le = LabelEncoder()
-            data[column] = le.fit_transform(data[column])
-            encoders[column] = le
-        else:
-            st.warning(f"Column '{column}' not found in the dataset. Skipping.")
-    return data, encoders
-
-categorical_columns = ['Area', 'Item']
-data, label_encoders = encode_categorical_columns(data, categorical_columns)
-
-# Display the processed dataset
-st.subheader("Processed Dataset")
-st.dataframe(data)
 
 # ---------------------------------------
 # Cache model loading
@@ -134,3 +99,40 @@ else:
     # Display prediction
     st.subheader("Predicted Crop Yield")
     st.write(f"The predicted crop yield using **{model_name}** is: **{predicted_yield:.2f} hg/ha_yield**")
+
+@st.cache_data
+def load_dataset():
+    try:
+        data = pd.read_csv('yield_df.csv')  # Update the path if needed
+        # Strip whitespace from string columns
+        data = data.apply(lambda col: col.str.strip() if col.dtype == 'object' else col)
+        return data
+    except FileNotFoundError:
+        st.error("Dataset not found. Please ensure the file 'yield_df.csv' is in the 'dataset/' folder.")
+        st.stop()
+
+data = load_dataset()
+
+# Display the dataset
+st.subheader("Dataset Overview")
+st.dataframe(data)
+
+# Convert categorical features to numerical using Label Encoding
+@st.cache_data
+def encode_categorical_columns(data, columns):
+    encoders = {}
+    for column in columns:
+        if column in data.columns:
+            le = LabelEncoder()
+            data[column] = le.fit_transform(data[column])
+            encoders[column] = le
+        else:
+            st.warning(f"Column '{column}' not found in the dataset. Skipping.")
+    return data, encoders
+
+categorical_columns = ['Area', 'Item']
+data, label_encoders = encode_categorical_columns(data, categorical_columns)
+
+# Display the processed dataset
+st.subheader("Processed Dataset")
+st.dataframe(data)
